@@ -1,4 +1,6 @@
-const EASE_TYPE = {
+'use strict';
+
+var EASE_TYPE = {
   BEZIER: 'bezier',
   LINEAR: 'linear',
   HOLD: 'hold'
@@ -10,7 +12,7 @@ module.exports = function getEaseForKeyFrame(prop, idxKeyFrame) {
     easeIn: {
       type: getEaseType(prop.keyInInterpolationType(idxKeyFrame)),
       temporalEase: getTemporalEaseIn(prop, idxKeyFrame)
-    }, 
+    },
 
     easeOut: {
       type: getEaseType(prop.keyOutInterpolationType(idxKeyFrame)),
@@ -18,7 +20,7 @@ module.exports = function getEaseForKeyFrame(prop, idxKeyFrame) {
     }
   };
 
-  if(prop.isSpatial) {
+  if (prop.isSpatial) {
     rVal.easeIn.spatialTangent = getSpatialTangentIn(prop, idxKeyFrame);
     rVal.easeOut.spatialTangent = getSpatialTangentOut(prop, idxKeyFrame);
   }
@@ -27,23 +29,23 @@ module.exports = function getEaseForKeyFrame(prop, idxKeyFrame) {
 };
 
 // get ease type
-function getEaseType(type){
-  switch(type) {
+function getEaseType(type) {
+  switch (type) {
     case KeyframeInterpolationType.BEZIER:
       return EASE_TYPE.BEZIER;
-    break;
+      break;
 
     case KeyframeInterpolationType.LINEAR:
       return EASE_TYPE.LINEAR;
-    break;
+      break;
 
     case KeyframeInterpolationType.HOLD:
       return EASE_TYPE.HOLD;
-    break;
+      break;
 
     default:
       throw new Error('unknown ease type');
-    break;
+      break;
   }
 }
 
@@ -59,8 +61,7 @@ function getTemporalEaseOut(prop, idxKeyFrame) {
 
 function getTemporalEase(func, prop, idxKeyFrame) {
   var type = prop.propertyValueType;
-  var rVal = prop[ func ](idxKeyFrame)
-  .map(function(easeInfo) {
+  var rVal = prop[func](idxKeyFrame).map(function (easeInfo) {
     return {
       speed: easeInfo.speed,
       influence: easeInfo.influence
@@ -69,7 +70,6 @@ function getTemporalEase(func, prop, idxKeyFrame) {
 
   return rVal;
 }
-
 
 // get in spatial tangent
 function getSpatialTangentIn(prop, idxKeyFrame) {
@@ -82,8 +82,8 @@ function getSpatialTangentOut(prop, idxKeyFrame) {
 }
 
 function getSpatialTangent(func, prop, idxKeyFrame) {
-  if(prop.isSpatial) {
-    return prop[ func ](idxKeyFrame);
+  if (prop.isSpatial) {
+    return prop[func](idxKeyFrame);
   } else {
     throw new Error('this function should not be called if prop.isSpatial is false');
   }

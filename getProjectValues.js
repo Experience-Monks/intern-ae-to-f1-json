@@ -1,8 +1,10 @@
+'use strict';
+
 var getItemValues = require('./getItemValues');
 var collectionToArray = require('./collectionToArray');
 
-module.exports = function(item, ignore) {
-  
+module.exports = function (item, ignore) {
+
   var rVal = {
     items: getItemValues(collectionToArray(item.items))
   };

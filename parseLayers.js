@@ -1,20 +1,19 @@
+'use strict';
+
 var extend = require('extend');
 var getTypeOf = require('./getTypeOf');
 var extend = require('extend');
 var getProperties = require('./getProperties');
 
-module.exports = function(item) {
+module.exports = function (item) {
     var rVal = [];
-    
-    item.forEach(function(layer) {
-        var animationData = [
-            'Transform', 
-            'Time Remap'
-        ];
-        var props = getProperties(layer, animationData)
+
+    item.forEach(function (layer) {
+        var animationData = ['Transform', 'Time Remap'];
+        var props = getProperties(layer, animationData);
         var layerSource;
-        if(layer.source) {
-          layerSource = layer.source.file && layer.source.file.toString();
+        if (layer.source) {
+            layerSource = layer.source.file && layer.source.file.toString();
         }
         rVal.push({
             hasVideo: layer.hasVideo,
@@ -27,6 +26,6 @@ module.exports = function(item) {
             properties: props
         });
     });
-    
-  return rVal;
+
+    return rVal;
 };

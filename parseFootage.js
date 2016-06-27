@@ -1,3 +1,5 @@
+'use strict';
+
 var extend = require('extend');
 var getTypeOf = require('./getTypeOf');
 var parseLayers = require('./parseLayers');
@@ -5,7 +7,7 @@ var getNonObjectValues = require('./getNonObjectValues');
 var collectionToArray = require('./collectionToArray');
 var extend = require('extend');
 
-module.exports = function(item) {
+module.exports = function (item) {
     var rVal = extend({}, {
         duration: item.duration,
         frameDuration: item.frameDuration,
@@ -20,6 +22,6 @@ module.exports = function(item) {
             file: item.mainSource.file && item.mainSource.file.toString()
         }
     });
-    
-  return rVal;
+
+    return rVal;
 };
