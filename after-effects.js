@@ -276,7 +276,7 @@ module.exports = function getItemValues(item) {
 
     return getItemValues(item);
 };
-},{"./parseComposition":14,"./parseFolder":15,"./parseFootage":16,"extend":4}],9:[function(require,module,exports){
+},{"./parseComposition":15,"./parseFolder":16,"./parseFootage":17,"extend":4}],9:[function(require,module,exports){
 'use strict';
 
 var getEaseForKeyFrame = require('./getEaseForKeyFrame');
@@ -366,6 +366,7 @@ var merge = require('xtend');
 
 var getKeyframesForProp = require('./getKeyframesForProp');
 var getNonObjectValues = require('./getNonObjectValues');
+var getPropertyValueType = require('./getPropertyValueType');
 
 // this function will export all properties for a layer
 module.exports = function getProperties(layer, extract) {
@@ -390,10 +391,10 @@ module.exports = function getProperties(layer, extract) {
           }
 
           currentTarget = merge(currentTarget, baseValues, {
-            keyframes: getKeyframesForProp(property)
+            keyframes: getKeyframesForProp(property),
+            propertyValueType: getPropertyValueType(property.propertyValueType)
           });
         }
-
         // we want to remove name as it will be the objects variable name
         // delete currentTarget.name;
         target[property.name] = currentTarget;
@@ -427,7 +428,55 @@ function getPropertyGroupArray(layer, extract, parent) {
 
   return rVal;
 }
-},{"./getKeyframesForProp":9,"./getNonObjectValues":10,"xtend":5}],13:[function(require,module,exports){
+},{"./getKeyframesForProp":9,"./getNonObjectValues":10,"./getPropertyValueType":13,"xtend":5}],13:[function(require,module,exports){
+'use strict';
+
+module.exports = function getPropertyValueType(type) {
+  switch (type) {
+    case PropertyValueType.NO_VALUE:
+      return 'NO_VALUE';
+
+    case PropertyValueType.ThreeD_SPATIAL:
+      return 'ThreeD_SPATIAL';
+
+    case PropertyValueType.ThreeD:
+      return 'ThreeD';
+
+    case PropertyValueType.TwoD_SPATIAL:
+      return 'TwoD_SPATIAL';
+
+    case PropertyValueType.TwoD:
+      return 'TwoD';
+
+    case PropertyValueType.OneD:
+      return 'OneD';
+
+    case PropertyValueType.COLOR:
+      return 'COLOR';
+
+    case PropertyValueType.CUSTOM_VALUE:
+      return 'CUSTOM_VALUE';
+
+    case PropertyValueType.MARKER:
+      return 'MARKER';
+
+    case PropertyValueType.LAYER_INDEX:
+      return 'LAYER_INDEX';
+
+    case PropertyValueType.MASK_INDEX:
+      return 'MASK_INDEX';
+
+    case PropertyValueType.SHAPE:
+      return 'SHAPE';
+
+    case PropertyValueType.TEXT_DOCUMENT:
+      return 'TEXT_DOCUMENT';
+
+    default:
+      return 'UNKNOWN';
+  }
+};
+},{}],14:[function(require,module,exports){
 "use strict";
 
 // for some reason typeof is breaking in AE
@@ -455,7 +504,7 @@ function getTypeOf(item) {
 
   return type;
 }
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 'use strict';
 
 var extend = require('extend');
@@ -479,7 +528,7 @@ module.exports = function (item) {
 
     return rVal;
 };
-},{"./collectionToArray":6,"./getTypeOf":13,"./parseLayers":17,"extend":4}],15:[function(require,module,exports){
+},{"./collectionToArray":6,"./getTypeOf":14,"./parseLayers":18,"extend":4}],16:[function(require,module,exports){
 'use strict';
 
 var extend = require('extend');
@@ -497,7 +546,7 @@ module.exports = function (item) {
 
     return rVal;
 };
-},{"./collectionToArray":6,"./getItemValues":8,"./getTypeOf":13,"extend":4}],16:[function(require,module,exports){
+},{"./collectionToArray":6,"./getItemValues":8,"./getTypeOf":14,"extend":4}],17:[function(require,module,exports){
 'use strict';
 
 var extend = require('extend');
@@ -525,7 +574,7 @@ module.exports = function (item) {
 
     return rVal;
 };
-},{"./collectionToArray":6,"./getNonObjectValues":10,"./getTypeOf":13,"./parseLayers":17,"extend":4}],17:[function(require,module,exports){
+},{"./collectionToArray":6,"./getNonObjectValues":10,"./getTypeOf":14,"./parseLayers":18,"extend":4}],18:[function(require,module,exports){
 'use strict';
 
 var extend = require('extend');
@@ -557,7 +606,7 @@ module.exports = function (item) {
 
     return rVal;
 };
-},{"./getProperties":12,"./getTypeOf":13,"extend":4}]},{},[3])(3)
+},{"./getProperties":12,"./getTypeOf":14,"extend":4}]},{},[3])(3)
 });
 return window.aeToJSON.apply(undefined, arguments);
 };
