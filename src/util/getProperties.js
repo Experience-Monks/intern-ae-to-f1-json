@@ -2,6 +2,7 @@ var merge = require('xtend');
 
 var getKeyframesForProp = require('./getKeyframesForProp');
 var getNonObjectValues = require('./getNonObjectValues');
+var getPropertyValueType = require('./getPropertyValueType');
 
 // this function will export all properties for a layer
 module.exports = function getProperties(layer, extract) {
@@ -30,11 +31,11 @@ module.exports = function getProperties(layer, extract) {
             currentTarget,
             baseValues,
             {
-              keyframes: getKeyframesForProp(property)
+              keyframes: getKeyframesForProp(property),
+              propertyValueType: getPropertyValueType(property.propertyValueType)
             }
           );
         } 
-
         // we want to remove name as it will be the objects variable name
         // delete currentTarget.name;
         target[ property.name ] = currentTarget;
