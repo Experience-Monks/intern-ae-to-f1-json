@@ -289,6 +289,10 @@ module.exports = function getKeyFramesForProp(prop) {
   if (prop.propertyValueType !== PropertyValueType.NO_VALUE) {
     // we have keyframes add all keyframes
     if (prop.numKeys > 0) {
+      // Position needs to be an expression to track curved motion
+      if (prop.name === 'Position' && prop.numKeys > 2) {
+        convertToExpression(prop);
+      }
 
       for (var i = 1; i <= prop.numKeys; i++) {
         rVal.push([prop.keyTime(i), prop.keyValue(i), getEaseForKeyFrame(prop, i)]);
@@ -304,6 +308,12 @@ module.exports = function getKeyFramesForProp(prop) {
   }
 
   return rVal;
+
+  function convertToExpression(prop) {
+    prop.selected = true;
+    app.executeCommand(2702);
+    app.executeCommand(2639);
+  }
 };
 },{"./getEaseForKeyFrame":7}],10:[function(require,module,exports){
 "use strict";
