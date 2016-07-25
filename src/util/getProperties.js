@@ -59,7 +59,7 @@ function getPropertyGroupArray(layer, extract, parent) {
   var rVal = [];
   if(parent) {
     extract.forEach(function(item) {
-      rVal.push(layer.property(item));
+      if(layer.property(item)) rVal.push(layer.property(item));
     });  
   }
   else {
