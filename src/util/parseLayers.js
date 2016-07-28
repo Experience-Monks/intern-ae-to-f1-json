@@ -2,6 +2,7 @@ var extend = require('extend');
 var getTypeOf = require('./getTypeOf');
 var extend = require('extend');
 var getProperties = require('./getProperties');
+var justifyCodeToString = require('./justifyCodeToString');
 
 module.exports = function(item) {
     var rVal = [];
@@ -21,7 +22,10 @@ module.exports = function(item) {
         if(layer.matchName === 'ADBE Text Layer') {
             var textDoc = layer.property('Source Text').value;
             fontExtract.forEach(function (e) {
-                if(textDoc[e]) font[e] = textDoc[e];
+                if(textDoc[e] && e === 'justification') {
+                    font[e] = justifyCodeToString(textDoc[e]);
+                }
+                else if(textDoc[e]) font[e] = textDoc[e];
             });
         }
         rVal.push({
