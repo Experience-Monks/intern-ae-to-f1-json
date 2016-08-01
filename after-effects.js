@@ -276,7 +276,7 @@ module.exports = function getItemValues(item) {
 
     return getItemValues(item);
 };
-},{"./parseComposition":15,"./parseFolder":16,"./parseFootage":17,"extend":4}],9:[function(require,module,exports){
+},{"./parseComposition":16,"./parseFolder":17,"./parseFootage":18,"extend":4}],9:[function(require,module,exports){
 'use strict';
 
 var getEaseForKeyFrame = require('./getEaseForKeyFrame');
@@ -428,7 +428,7 @@ function getPropertyGroupArray(layer, extract, parent) {
   var rVal = [];
   if (parent) {
     extract.forEach(function (item) {
-      rVal.push(layer.property(item));
+      if (layer.property(item)) rVal.push(layer.property(item));
     });
   } else {
     for (var i = 1; i <= layer.numProperties; i++) {
@@ -517,6 +517,35 @@ function getTypeOf(item) {
 },{}],15:[function(require,module,exports){
 'use strict';
 
+var LEFT_JUSTIFY = 7213;
+var RIGHT_JUSTIFY = 7214;
+var CENTER_JUSTIFY = 7215;
+var FULL_JUSTIFY_LASTLINE_LEFT = 7216;
+var FULL_JUSTIFY_LASTLINE_RIGHT = 7217;
+var FULL_JUSTIFY_LASTLINE_CENTER = 7218;
+var FULL_JUSTIFY_LASTLINE_FULL = 7219;
+
+module.exports = function (code) {
+  switch (code) {
+    case LEFT_JUSTIFY:
+      return 'left';
+    case RIGHT_JUSTIFY:
+      return 'right';
+    case CENTER_JUSTIFY:
+      return 'center';
+    case FULL_JUSTIFY_LASTLINE_LEFT:
+      return 'justify';
+    case FULL_JUSTIFY_LASTLINE_RIGHT:
+      return 'justify';
+    case FULL_JUSTIFY_LASTLINE_CENTER:
+      return 'justify';
+    case FULL_JUSTIFY_LASTLINE_FULL:
+      return 'justify';
+  }
+};
+},{}],16:[function(require,module,exports){
+'use strict';
+
 var extend = require('extend');
 var getTypeOf = require('./getTypeOf');
 var parseLayers = require('./parseLayers');
@@ -538,7 +567,7 @@ module.exports = function (item) {
 
     return rVal;
 };
-},{"./collectionToArray":6,"./getTypeOf":14,"./parseLayers":18,"extend":4}],16:[function(require,module,exports){
+},{"./collectionToArray":6,"./getTypeOf":14,"./parseLayers":19,"extend":4}],17:[function(require,module,exports){
 'use strict';
 
 var extend = require('extend');
@@ -556,7 +585,7 @@ module.exports = function (item) {
 
     return rVal;
 };
-},{"./collectionToArray":6,"./getItemValues":8,"./getTypeOf":14,"extend":4}],17:[function(require,module,exports){
+},{"./collectionToArray":6,"./getItemValues":8,"./getTypeOf":14,"extend":4}],18:[function(require,module,exports){
 'use strict';
 
 var extend = require('extend');
@@ -584,23 +613,34 @@ module.exports = function (item) {
 
     return rVal;
 };
-},{"./collectionToArray":6,"./getNonObjectValues":10,"./getTypeOf":14,"./parseLayers":18,"extend":4}],18:[function(require,module,exports){
+},{"./collectionToArray":6,"./getNonObjectValues":10,"./getTypeOf":14,"./parseLayers":19,"extend":4}],19:[function(require,module,exports){
 'use strict';
 
 var extend = require('extend');
 var getTypeOf = require('./getTypeOf');
 var extend = require('extend');
 var getProperties = require('./getProperties');
+var justifyCodeToString = require('./justifyCodeToString');
 
 module.exports = function (item) {
     var rVal = [];
 
     item.forEach(function (layer) {
         var animationData = ['Transform', 'Time Remap'];
+        var fontExtract = ['font', 'fontSize', 'fillColor', 'text', 'justification'];
         var props = getProperties(layer, animationData);
         var layerSource;
+        var font = {};
         if (layer.source) {
             layerSource = layer.source.file && layer.source.file.toString();
+        }
+        if (layer.matchName === 'ADBE Text Layer') {
+            var textDoc = layer.property('Source Text').value;
+            fontExtract.forEach(function (e) {
+                if (textDoc[e] && e === 'justification') {
+                    font[e] = justifyCodeToString(textDoc[e]);
+                } else if (textDoc[e]) font[e] = textDoc[e];
+            });
         }
         rVal.push({
             hasVideo: layer.hasVideo,
@@ -610,13 +650,14 @@ module.exports = function (item) {
             nullLayer: layer.nullLayer,
             source: layerSource,
             time: layer.time,
+            font: font,
             properties: props
         });
     });
 
     return rVal;
 };
-},{"./getProperties":12,"./getTypeOf":14,"extend":4}]},{},[3])(3)
+},{"./getProperties":12,"./getTypeOf":14,"./justifyCodeToString":15,"extend":4}]},{},[3])(3)
 });
 return window.aeToJSON.apply(undefined, arguments);
 };
